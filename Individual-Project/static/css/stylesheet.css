@@ -1,0 +1,39 @@
+#title{font-family: "American Typewriter, serif"}
+.vertical-menu {
+  width: 200px;
+}
+
+header{ text-align: center; color:#ff3399; font-size: 50px;}
+
+body {
+  background-image: url("https://w0.peakpx.com/wallpaper/484/211/HD-wallpaper-blended-nice-blue-color-pink-purple-quality-themes.jpg");
+}    
+
+.vertical-menu a {
+  background-color: #eee;
+  color: black;
+  display: block;
+  padding: 12px;
+  text-decoration: none;
+  
+
+}
+
+.vertical-menu a:hover {
+  background-color: #ff66cc;
+}
+
+.vertical-menu a.active {
+  background-color: #ff66ff;
+  color: white;
+}
+
+.sign{ height:150px ; width:200px; background-color: #ff00ff; color:#ff3399; color:black;
+}
+
+/*#1 {
+padding-top: 50px;
+padding-right: 30px;
+padding-bottom: 50px;
+padding-left: 30px;
+}*/
