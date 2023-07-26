@@ -19,7 +19,27 @@
   </div>
     <h1>cart</h1>
 <ul>
-    
+
+    <h1>Your Bag</h1>
+    {% if items %}
+        <ul>
+            {% for item in items %}
+                <li>{{ item.name }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No items in your bag yet.</p>
+    {% endif %}
+
+    <h2>Add an item:</h2>
+    <form method="POST" action="/your_bag">
+        <input type="text" name="item_name" required>
+        <input type="submit" value="Add">
+    </form>
+
+    <a href="{{ url_for('signout') }}">Sign Out</a>
+
+
 </ul>
 
 </center>

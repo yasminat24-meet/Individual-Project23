@@ -39,7 +39,7 @@ def snacks():
 def shop():
     return render_template("shop_all.html")
 
-@app.route('/cart')
+@app.route('/cart',methods=['GET', 'POST'])
 def cart():
     return render_template("cart.html")
 
@@ -55,8 +55,6 @@ def signin():
             return redirect(url_for('home'))
         except:
             error = "Authentication failed"
-            return render_template("sign_in.html")
-    else:
         return render_template("sign_in.html")
 
 
@@ -81,18 +79,21 @@ def signup():
 
 @app.route('/your_bag',methods=['GET', 'POST'])
 def yourbag():
-    # return render_template("your_bag.html")
     if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-        try:
-            login_session['user']=auth.create_user_with_email_and_password(email, password)
-            return redirect(url_for('home'))
-        except:
-            error = "Authentication failed"
-            return render_template("your_bag.html")
-    else:
-        return render_template("your_bag.html")
+        item_name = request.form['item_name']
+        user_id = login_session.get('user', {}).get('localId')
+
+        if user_id:
+            db.child("Users").child(user_id).child("Items").push({"name": item_name})
+
+        # Retrieve updated items from Firebase and pass them to the template
+        user_items = []
+        items = db.child("Users").child(user_id).child("Items").get()
+        if items.each():
+            user_items = [item.val() for item in items.each()]
+
+        return render_template("your_bag.html", items=user_items)
+  
 
 @app.route('/signout')
 def signout():
