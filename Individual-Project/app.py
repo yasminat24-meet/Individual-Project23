@@ -10,9 +10,11 @@ config = {
   "messagingSenderId": "13013348316",
   "appId": "1:13013348316:web:8730cfb2048110bd622919",
   "measurementId": "G-0RQHF75YWH",
-  "databaseURL" : ""}
+  "databaseURL" : "https://individual-pro-default-rtdb.europe-west1.firebasedatabase.app/"}
+
 firebase = pyrebase.initialize_app(config)
 auth = firebase.auth()
+db = firebase.database()
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
 app.config['SECRET_KEY'] = 'super-secret-key'
@@ -25,17 +27,22 @@ def index_page():
 def home_page():
     return render_template("home.html")
 
-@app.route('/aboutus',methods=['GET', 'POST'])
+@app.route('/aboutus', methods=['GET', 'POST'])
 def about():
     return render_template("aboutus.html")
 
-@app.route('/favs',methods=['GET', 'POST'])
-def favourite():
-    return render_template("favs.html")
+@app.route('/snacks',methods=['GET', 'POST'])
+def snacks():
+    return render_template("snacks.html")
 
 @app.route('/shop_all',methods=['GET', 'POST'])
 def shop():
     return render_template("shop_all.html")
+
+@app.route('/cart')
+def cart():
+    return render_template("cart.html")
+
 
 @app.route('/sign_in',methods=['GET', 'POST'])
 def signin():
@@ -61,6 +68,9 @@ def signup():
         password = request.form['password']
         try:
             login_session['user'] = auth.create_user_with_email_and_password(email, password)
+            UID = login_session['user']['localId']
+            user = {"name": "Fouad", "email": "f@h.com"}
+            db.child("Users").child(UID).set(user)
             return redirect(url_for('home'))
         except:
             error = "Authentication failed"
@@ -80,7 +90,19 @@ def yourbag():
             return redirect(url_for('home'))
         except:
             error = "Authentication failed"
-            return render_template("signup.html")
+            return render_template("your_bag.html")
+    else:
+        return render_template("your_bag.html")
+
+@app.route('/signout')
+def signout():
+    login_session['user'] = None
+    auth.current_user = None
+    return redirect(url_for('signin'))
+
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
